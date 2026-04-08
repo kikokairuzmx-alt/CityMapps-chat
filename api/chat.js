@@ -1,3 +1,12 @@
+{
+  "name": "CityMapps.com",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": { ... }
+}
+
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
