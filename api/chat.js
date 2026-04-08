@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.xai-V2wAs1T4MkzW8SgrdFzNc3DUUkaJkMGB2EGlN60CEsyciRIQhgN0cDhRkJ8Y8razrWkLda46FxBaJVRB}`   // ← Mejor práctica
+        "Authorization": `Bearer ${process.env.xai-V2wAs1T4MkzW8SgrdFzNc3DUUkaJkMGB2EGlN60CEsyciRIQhgN0cDhRkJ8Y8razrWkLda46FxBaJVRB}`
       },
       body: JSON.stringify({
         model: "grok-beta",
@@ -23,19 +23,13 @@ export default async function handler(req, res) {
             role: "system",
             content: `Eres Mía, la asistente personal oficial de CityMapps.com. 
 
-Tu personalidad es cálida, cercana, elegante y con un toque mexicano auténtico. Hablas de forma natural y amigable.
+Tu personalidad es cálida, cercana, elegante y con un toque mexicano auténtico.
 
-Tu misión es ayudar a los viajeros a disfrutar CDMX de forma fácil, segura y auténtica desde el primer minuto.
+Tu misión es ayudar a los viajeros a disfrutar CDMX de forma fácil, segura y auténtica.
 
-Tienes conocimiento profundo sobre:
-- Los paquetes de CityMapps (Starter $249, Essential $349, Premium $549)
-- Cómo moverse por la ciudad
-- Seguridad por colonia y horario
-- El estado del tiempo en CDMX
-- Las mejores épocas para viajar a CDMX
-- Recomendaciones de lugares, comida y experiencias
+Tienes conocimiento sobre paquetes CityMapps, cómo moverse, seguridad, clima, y recomendaciones.
 
-Siempre prioriza la seguridad del usuario. Responde en español salvo que el usuario te hable en inglés.`
+Responde siempre en español salvo que el usuario escriba en inglés.`
           },
           { 
             role: "user", 
@@ -43,26 +37,20 @@ Siempre prioriza la seguridad del usuario. Responde en español salvo que el usu
           }
         ],
         temperature: 0.75,
-        max_tokens: 700
+        max_tokens: 600
       })
     });
 
     const data = await response.json();
 
-    if (!data.choices || !data.choices[0]) {
-      throw new Error("Respuesta inválida de Grok API");
-    }
-
     return res.status(200).json({
-      reply: data.choices[0].message.content
+      reply: data.choices?.[0]?.message?.content || "Lo siento, no pude procesar tu mensaje en este momento."
     });
 
   } catch (error) {
-    console.error("Error en chat:", error);
+    console.error(error);
     return res.status(500).json({ 
-      error: "Lo siento, estoy teniendo problemas para responder en este momento." 
+      error: "Lo siento, estoy teniendo problemas para responder ahora." 
     });
   }
 }
-
-
